@@ -1,0 +1,226 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flight Price Prediction</title>
+
+  <script src="https://kit.fontawesome.com/5f3f547070.js" crossorigin="anonymous"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.5;
+      color: #333;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: #f9f9f9;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    header {
+      background-color: #2c3e50;
+      color: #fff;
+      padding: 1rem 2rem;
+    }
+    header .title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .form-container {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      padding: 2rem;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .card-box {
+      background: #fcfcfc;
+      border-radius: 6px;
+      border: 1px solid #e0e0e0;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-box h5 {
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      color: #2c3e50;
+    }
+    .card-box input,
+    .card-box select {
+      padding: 0.6rem 0.8rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .card-box input:focus,
+    .card-box select:focus {
+      border-color: #2980b9;
+    }
+    .btn-submit {
+      margin-top: 2rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #fff;
+      background-color: #2980b9;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+    .btn-submit:hover {
+      background-color: #1f6391;
+      transform: translateY(-1px);
+    }
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+    .prediction-output {
+      margin-top: 1.5rem;
+      font-size: 1.25rem;
+      color: #27ae60;
+      text-align: center;
+    }
+    footer {
+      background-color: #2c3e50;
+      color: #fff;
+      padding: 1.5rem 2rem;
+      text-align: center;
+    }
+    footer .contact-icons {
+      margin-bottom: 0.5rem;
+    }
+    footer .contact-icons a {
+      margin: 0 0.5rem;
+      color: #ecf0f1;
+      font-size: 1.2rem;
+      transition: color 0.2s;
+    }
+    footer .contact-icons a:hover {
+      color: #bdc3c7;
+    }
+    footer .footer-text {
+      font-size: 0.9rem;
+      opacity: 0.85;
+    }
+
+    @media (max-width: 480px) {
+      header .brand {
+        font-size: 1.25rem;
+        text-align: center;
+      }
+      .btn-submit {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="title">FLIGHT FARE PREDICTOR</div>
+  </header>
+  <main>
+    <div class="form-container">
+      <form action="/predict" method="post">
+        <div class="form-grid">
+          <div class="card-box">
+            <h5>Departure Date</h5>
+            <input type="datetime-local" name="Dep_Time" id="Dep_Time" required>
+          </div>
+          <div class="card-box">
+            <h5>Arrival Date</h5>
+            <input type="datetime-local" name="Arrival_Time" id="Arrival_Time" required>
+          </div>
+          <div class="card-box">
+            <h5>Source</h5>
+            <select name="Source" id="Source" required>
+              <option value="Delhi">Delhi</option>
+              <option value="Kolkata">Kolkata</option>
+              <option value="Mumbai">Mumbai</option>
+              <option value="Chennai">Chennai</option>
+            </select>
+          </div>
+          <div class="card-box">
+            <h5>Destination</h5>
+            <select name="Destination" id="Destination" required>
+              <option value="Cochin">Cochin</option>
+              <option value="Delhi">Delhi</option>
+              <option value="New Delhi">New Delhi</option>
+              <option value="Hyderabad">Hyderabad</option>
+              <option value="Kolkata">Kolkata</option>
+            </select>
+          </div>
+          <div class="card-box">
+            <h5>Stoppage(s)</h5>
+            <select name="Total_stops" id="Total_stops" required>
+              <option value="0">Non-Stop</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+          </div>
+          <div class="card-box">
+            <h5>Airline</h5>
+            <select name="Airline" id="Airline" required>
+              <option value="Jet Airways">Jet Airways</option>
+              <option value="IndiGo">IndiGo</option>
+              <option value="Air India">Air India</option>
+              <option value="Multiple carriers">Multiple carriers</option>
+              <option value="SpiceJet">SpiceJet</option>
+              <option value="Vistara">Vistara</option>
+              <option value="Air Asia">Air Asia</option>
+              <option value="GoAir">GoAir</option>
+              <option value="Multiple carriers Premium economy">Multiple carriers Premium economy</option>
+              <option value="Jet Airways Business">Jet Airways Business</option>
+              <option value="Vistara Premium economy">Vistara Premium economy</option>
+              <option value="Trujet">Trujet</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Submit</button>
+
+        <div class="prediction-output">
+          {{ prediction_text }}
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <div class="contact-icons">
+      <a href="https://www.linkedin.com/in/tofik-raza-a49164242" target="_blank"><i class="fab fa-linkedin"></i></a>
+    </div>
+    <div class="footer-text">© Tofik Raza 2023</div>
+  </footer>
+</body>
+</html>
